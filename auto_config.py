@@ -1,468 +1,200 @@
-'''
-pending : 
-apgroup3 neeed to update 
-need to add print stateent at every function call by checking configuration file
-taking input from excel
-'''
+
 from openpyxl import load_workbook
-wb = load_workbook("questionnaire.xlsx")
-sheet = wb['Questions']
+wb = load_workbook("user_input.xlsx")
+sheet = wb['ap_group']
 
 
 
 #variables amd their values which are assumed entered by user
-user_input = 2
 #promting user for input vap1 as 1 and vap2 as 2 and vap3 as 3
-user_vap1_input = 1
-user_vap2_input = 2
-user_vap3_input = 3
-user_input_lms_ip = "72.1.1.1"
-user_radius1_host_input = " 30.1.1.1" 
-user_radius1_key_input =  " qwerty"
-user_radius2_host_input =  "30.1.1.2"
-user_radius2_key_input =   "asdfgh"
-user_radius3_host_input =  "30.1.1.3"
-user_radius3_key_input =   "zxcvbn"
+user_vap_input = int(sheet['B2'].value)
 
 
 def main():
-    user_input = int(input("please enter input to excute apgroups : "))
+    user_input = int(sheet['B1'].value)
     if user_input == 1:
-        apgroup1(user_vap1_input,user_vap2_input)
+        print("ap-group APGROUP-1")
+        apgroup1(user_vap_input)
 
     if user_input == 2:
         #please enter virtual_ap print statement
-        apgroup1(user_vap1_input,user_vap2_input)
+        print("ap-group APGROUP-1")
+        apgroup1()
         apgroup2()
+      
+    if user_input >2 :
+        for i in range (3,user_input+1):
+            print("ap-group APGROUP-%d"%user_input)
+      
     
-    if user_input == 3:
-        apgroup1(user_vap1_input,user_vap2_input)
-        apgroup2()
-        apgroup3()
-    
-        
-
-
 #apgroup1
-def apgroup1(user_vap1_input,user_vap2_input):
-    if user_vap1_input == 1: #user_vap1_input = int(input("please enter "1" for vap1 : "))
+def apgroup1():
+    if user_vap_input == 1: #user_vap1_input = int(input("please enter "1" for vap1 : "))
+        print("   virtual-ap VAP-1")
+        print("   ap-system-profile APSYS    \n!")
         wlan_virtual_ap_VAP_1()
-    if user_vap2_input == 2: #user_vap2_input = int(input("please enter "2" for vap2: "))
+        APSYS()
+
+    if user_vap_input == 2: #user_vap2_input = int(input("please enter "2" for vap2: "))
+        print("   virtual-ap VAP-1")
+        print("   virtual-ap VAP-2")
+        print("   ap-system-profile APSYS    \n!")
         wlan_virtual_ap_VAP_2()
-    APSYS() # ap_system_profile
-    MYRADIO_0() # dot11g_radio_profile
-    MYRADIO_1() # dot11g_radio_profile
-    TMP_1() #dot11a_traffic_mgmt_profile TMP_1
+
+        APSYS() # ap_system_profile
+        MYRADIO_0() # dot11g_radio_profile
+        MYRADIO_1() # dot11g_radio_profile
+        TMP_1() #dot11a_traffic_mgmt_profile TMP_1
 
 # group2
 def apgroup2():
-    #apgroup2 has only one option why should we ask user for input
+    print('ap-group APGROUP-2 \n   virtual-ap VAP-3 \n   dot11a-radio-profile MYRADIO-0 \n   dot11g-radio-profile MYRADIO-1 \n   ap-system-profile APSYS \n   dot11a-traffic-mgmt-profile TMP-1 \n!')
     wlan_virtual_ap_VAP_3()
-    APSYS() # ap_system_profile 
+    APSYS()
     MYRADIO_0()
     MYRADIO_1()
-    TMP_1()  #dot11a_traffic_mgmt_profile TMP_1
-
-# group3
-def apgroup3():
-    print("still this block is pending neeed to update")
-    
+    TMP_1()  
 
 
 # virtual_aps
 def wlan_virtual_ap_VAP_1():
+    print("wlan virtual-ap VAP-1 \n   aaa-profile AAA-1 \n   ssid-profile SSID1 \n   vap-enable \n   vlan 106 \n!")
     aaa_profile_AAA_1()
     ssid_profile_SSID1()  
-    print("vap_enable")
-    print("vlan 106")
-
+  
 def wlan_virtual_ap_VAP_2():
+    print("wlan virtual-ap VAP-2 \n   aaa-profile AAA-2 \n   ssid-profile SSID2 \n   vap-enable \n   vlan 107 \n!")
     aaa_profile_AAA_2()
     ssid_profile_SSID2()
-    print("vap_enable")
-    print("vlan 107")
+  
     
 
 def wlan_virtual_ap_VAP_3():
+    print('wlan virtual-ap "VAP-3" \n   aaa-profile "AAA-1" \n   ssid-profile "SSID-2" \n   vap-enable \n   vlan 106 \n!')
     aaa_profile_AAA_1()
     ssid_profile_SSID3()
-    print("vlan 106")
 
-def APSYS(): # system_profile
-    print("syscontact : ABC")
-    #user_input_lms_ip = str(input("Enter lms ip :"))
-    print("lms_ip %s",user_input_lms_ip)
 
+def APSYS():
+   lms_ip = rfc_server = str(sheet['B3'].value)
+   print('ap system-profile APSYS \n   syscontact "ABC" \n   lms-ip %s \n!'%lms_ip)
 
 
 #aaa_profiles
 def aaa_profile_AAA_1():
+    print('aaa profile AAA-1 \n   initial-role INIT-R1 \n   authentication-dot1x DOT1X-PF \n   dot1x-default-role FINAL-R1 \n   dot1x-server-group SG-1 \n!')
     INIT_R1()
     DOT1X_PF()
     FINAL_R1()
     SG_1()
 
 def aaa_profile_AAA_2():
+    rfc_server = str(sheet['B10'].value)
+    print('aaa profile AAA-2 \n   initial-role INIT-R2 \n   authentication-mac MAC-2 \n   mac-default-role FINAL-R2 \n   mac-server-group SG-2 \n   rfc-3576-server %s \n!'%rfc_server)
     INIT_R2()
-    #authentication_mac MAC_2 "not mentioned discription line 57 in configuration file"
+    MAC_2()
     FINAL_R2()
     SG_2()
-    rfc_3576_server_2_2_2_2()
+    #rfc_3576_server_2_2_2_2() #is this just ah print statement
 
-    
-#aaa fun reqirements
-def rfc_3576_server_2_2_2_2():
+#WHAT ARE LINES RELATED TO 59 TO 64 IN CONFIGURATION FILE   ?
+#aaa  reqirements
+def rfc_3576_server_2_2_2_2(): #how to find this in configuration file?
     print("aaa rfc_3576_server 2.2.2.2")
 
-
-def INIT_R1():#  initial_role
-    print("access_list session log_c") #user_role
+def INIT_R1():
+    print("user-role INIT-R1 \n access-list session log-c \n!") #user_role
 def INIT_R2():
-    print("captive_portal CP_SSID_2 ")
-    print("access_list session log_c")
+    print('user-role INIT-R2 \n captive-portal CP-SSID-2 \n access-list session log-c \n!')
+    captive_portal_CP()
+def captive_portal_CP():
+    print('aaa authentication captive-portal CP-SSID-2 \n   default-role FINAL-R2   default-guest-role FINAL-R2 \n   server-group SG-2 \n   login-page https://abcd.php \n   welcome-page http://abcd.com \n!')
 
-def  DOT1X_PF(): #authentication
+
+def DOT1X_PF(): 
     MAC_R1()
     DOTIX_R1()
 
-def MAC_R1():# machine_authentication machine_default_role 
-    print("access_list session allowall")#user role
+def MAC_R1():
+    print("user-role MAC-R1 \n access-list session allowall \n!")#user role
 
-def DOTIX_R1():# machine_authentication user_default_role
-    print("access_list session allowall")#user role     
+def DOTIX_R1():
+    print("user-role DOT1X-R1 \n access-list session allowall \n!")#user role     
 
-def FINAL_R1():  #dot1x_default_role
-    print("access_list session allowall")#user role 
+def FINAL_R1(): 
+    print("user-role FINAL-R1   \n access-list session allowall \n!")#user role 
 def FINAL_R2():
-    print("access_list session ra_guard")
-
-def SG_1(): # dot1x_server_group
+    print("user-role FINAL-R2   \n access-list session ra-guard \n!")
+def MAC_2():
+    print('aaa authentication mac MAC-2 \n!')
+def SG_1():
     RADIUS_1()
     RADIUS_2()
     
 def SG_2():
     RADIUS_2()  
 #RADIUS
+
 def RADIUS_1():
-    #user_radius_1_host_input = input('enter_host_input :')
-    #user_radius_2_key_input = input('enter_host_input :')
-    print("host  %s", user_radius1_host_input)
-    print("key  %s" ,user_radius1_key_input)
+    rad1_server_ip = str(sheet['B4'].value)
+    rad1_key = str(sheet['B5'].value)
+    print('aaa authentication-server radius RADIUS-1 \n   host %s  \n   key %s \n!'%(rad1_server_ip,rad1_key))
 
 def RADIUS_2():
-    #user_radius_2_host_input = input('enter_host_input :')
-    #user_radius_2_key_input = input('enter_host_input :')
-    print("host  %s", user_radius2_host_input)
-    print("key  %s" ,user_radius2_key_input)
+    rad2_server_ip = str(sheet['B6'].value)
+    rad2_key = str(sheet['B7'].value)
+    print('aaa authentication-server radius RADIUS-2 \n   host %s  \n   key %s \n!'%(rad2_server_ip,rad2_key))
 
 def RADIUS_3():
-    #user_radius_3_host_input = input('enter_host_input :')
-    #user_radius_3_key_input = input('enter_host_input :')
-    print("host %s", user_radius3_host_input)
-    print("key %s" ,user_radius3_key_input)
-
+    rad3_server_ip = str(sheet['B8'].value)
+    rad3_key = str(sheet['B9'].value)
+    print('aaa authentication-server radius RADIUS-3 \n   host %s  \n   key %s \n!'%(rad3_server_ip,rad3_key))
 
 
 #SSID'S
 def ssid_profile_SSID1():
-    #call wifi 1
-    print("essid WIFI_1")
-    #opmode wpa2_aes
+    print('wlan ssid-profile "SSID-1" \n   essid "WIFI-1" \n   opmode wpa2-aes \n!')
+
 
 def ssid_profile_SSID2():
-    #call wifi 2
-    print("essid WIFI_2")
+    print('wlan ssid-profile SSID-2 \n   essid "WIFI-2" \n!')
 
 def ssid_profile_SSID3():
-    print("essid WIFI_3")
-    # calling wifi 3
+    print('wlan ssid-profile "SSID-3" \n   essid "WIFI-3" \n   opmode wpa2-aes \n!')
+
 
 #wlans
 def MYRADIO_0():   # dot11g_radio_profile
+    print('rf dot11a-radio-profile MYRADIO-0 \n   arm-profile MYARM-0 \n   ht-radio-profile MY-HT-0 \n   am-scan-profile MY-AM-0 \n!')
     MYARM_0()
     MY_HT_0()
     MY_AM_0()
-def MYRADIO_1():    # dot11g_radio_profile
+def MYRADIO_1():  
+    print('rf dot11g-radio-profile MYRADIO-1 \n   arm-profile MYARM-1 \n!')
     MYARM_1()
 
-def MYARM_0():   #rf arm_profile
-    print("40MHz_allowed_bands None")
-
-def MY_HT_0():  #rf ht_radio_profile
-     print("ht_radio_profile")
+def MYARM_0():   
+    print('rf arm-profile MYARM-0 \n   40MHz-allowed-bands None \n!')
+def MY_HT_0():  
+    print("rf ht-radio-profile MY-HT-0 \n!")
     
-def MY_AM_0(): #am_scan_profile
-     print("am_scan_profile")
-
-def MYARM_1():  #rf arm_profile
-     print(" 40MHz_allowed_bands None ")
-
-def TMP_1(): #wlan traffic_management_profile
-    print("shaping_policy fair_access")
-
-#vlan
-def main_vlan():
-    user_vlan_selction = int(input("Enter number of VLANs to be created : "))
-    if user_vlan_selction == 1:
-        vlan1()
-    if user_vlan_selction == 1:
-        vlan1()
-        vlan2()
-    if user_vlan_selction == 1:
-        vlan1()
-        vlan2()
-        vlan3()
-    if user_vlan_selction == 1:
-        vlan1()
-        vlan2()
-        vlan3()
-        vlan4()
-    
-def vlan1():
-    user_vlan = int(input("Enter 1st vlan number : "))
-    if user_vlan == 101:
-        print("vlan 101")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 101 IP address : "))
-        if user_ip == "101.1.1.1":
-            print("interface vlan 101")
-            print("ip address 101.1.1.2 255.255.255.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 101 name"))
-            if vlan_name == "AP Vlan":
-                print(' description "AP Vlan" ')
-                print("!")
-
-def vlan2():
-    user_vlan = int(input("Enter 2nd vlan number : "))
-    print("vlan 106")
-    if user_vlan == 106:
-        print("vlan 106")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 106 IP address : "))
-        if user_ip == "106.1.1.1":
-            print("interface gigabitethernet 0/0/1")
-            print("ip address 106.1.1.1 255.255.252.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 106 name"))
-            if vlan_name == "SSID1 Vlan":
-                print('  description "SSID1 Vlan" ')
-                print("!")
+def MY_AM_0():
+    print("am_scan_prorf am-scan-profile MY-AM-0 \n!")
 
 
-        
-def vlan3():
-    user_vlan  = int(input("Enter 3rd vlan number : "))
-    if user_vlan == 107:
-        print("vlan 107")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 107 IP address : "))
-        if user_ip == "107.1.1.1":
-            print("interface vlan 107")
-            print(" ip address 107.1.1.1 255.255.240.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 107 name"))
-            if vlan_name == "SSID2 Vlan":
-                print('  description "SSID2 Vlan" ')
-                print("!")
-            
-           
+def MYARM_1(): 
+    print("rf arm-profile MYARM-1 \n   40MHz-allowed-bands None \n! ")
 
 
-def vlan4():
-    user_vlan  = int(input("Enter 4rd vlan number : "))
-    if user_vlan == 500:
-        print("vlan 500")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 500 IP address : "))
-        if user_ip == "50.1.1.1":
-            print("interface vlan 500")
-            print('description "MGMT VLAN" ip address 50.1.1.1 255.255.255.0')
-            print("ip radius source-interface vlan 500")
-            print("ip radius source-interface vlan 500")
-            print("!")
-            vlan_name = str(input("Enter VLAN 500 name"))
-            if vlan_name == "MGMT VLAN":
-                print('  description  "MGMT VLAN" ')
-                print("!")
-'''              
-#DHCP not uderstandable
-def dhcp_main():
-    ser_req = str(input("Is DHCP service required :"))
-    if ser_req == "Yes":
-
-    if ser_req == "No":
-'''
-#vrrp 
-
-#vlan
-def main_vlan():
-    user_vlan_selction = int(input("Enter number of VLANs to be created : "))
-    if user_vlan_selction == 1:
-        vlan1()
-    if user_vlan_selction == 2:
-        vlan1()
-        vlan2()
-    if user_vlan_selction == 3:
-        vlan1()
-        vlan2()
-        vlan3()
-    if user_vlan_selction == 4:
-        vlan1()
-        vlan2()
-        vlan3()
-        vlan4()
-    
-def vlan1():
-    user_vlan = int(input("Enter 1st vlan number : "))
-    if user_vlan == 101:
-        print("vlan 101")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 101 IP address : "))
-        if user_ip == "101.1.1.1":
-            print("interface vlan 101")
-            print("ip address 101.1.1.2 255.255.255.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 101 name :"))
-            if vlan_name == "AP Vlan":
-                print(' description "AP Vlan" ')
-                print("!")
-
-def vlan2():
-    user_vlan = int(input("Enter 2nd vlan number : "))
-    print("vlan 106")
-    if user_vlan == 106:
-        print("vlan 106")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 106 IP address : "))
-        if user_ip == "106.1.1.1":
-            print("interface gigabitethernet 0/0/1")
-            print("ip address 106.1.1.1 255.255.252.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 106 name :"))
-            if vlan_name == "SSID1 Vlan":
-                print('  description "SSID1 Vlan" ')
-                print("!")
+def TMP_1(): 
+    print("wlan traffic-management-profile TMP-1 \n   shaping-policy fair-access \n!")
 
 
-        
-def vlan3():
-    user_vlan  = int(input("Enter 3rd vlan number : "))
-    if user_vlan == 107:
-        print("vlan 107")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 107 IP address : "))
-        if user_ip == "107.1.1.1":
-            print("interface vlan 107")
-            print(" ip address 107.1.1.1 255.255.240.0")
-            print("!")
-            vlan_name = str(input("Enter VLAN 107 name :"))
-            if vlan_name == "SSID2 Vlan":
-                print('  description "SSID2 Vlan" ')
-                print("!")
-            
-           
 
-def vlan4():
-    user_vlan  = int(input("Enter 4rd vlan number : "))
-    if user_vlan == 500:
-        print("vlan 500")
-        print("switchport trunk allowed vlan 500,101,106,107")
-        print("!")
-        user_ip = str(input("Enter VLAN 500 IP address : "))
-        if user_ip == "50.1.1.1":
-            print("interface vlan 500")
-            print('description "MGMT VLAN" ip address 50.1.1.1 255.255.255.0')
-            print("ip radius source-interface vlan 500")
-            print("ip radius source-interface vlan 500")
-            print("!")
-            vlan_name = str(input("Enter VLAN 500 name :"))
-            if vlan_name == "MGMT VLAN":
-                print('  description  "MGMT VLAN" ')
-                print("!")
-
-
-# VRRP_PORT FOR THIS INPUTS TAKEN FROM excel
-
-def vrrp_main():
-    VRRP_instance_number()
-    master_redundancy_password()
-    peer_IP_address()
-    VRRP_instance_name()
-    VRRP_IP_address()
-
-def VRRP_instance_number():
-    if str(sheet['D76'].value) == '101':
-        print("vrrp 101")
-    #if master redundancy password
-
-def master_redundancy_password():
-    if str(sheet['D77'].value) == 'vrrppassword':
-        print("authentication vrrppassword")
-
-def peer_IP_address():
-    if str(sheet['D78'].value) == '101.1.1.3':
-        print("peer-ip-address 101.1.1.3 ipsec masterpassword")
-def VRRP_instance_name():
-    if str(sheet['D79'].value) == 'Master':
-        print('description "Master"')
-
-def VRRP_IP_address():
-    if str(sheet['D80'].value) == '101.1.1.1':
-        print("ip address 101.1.1.1")
-        print("!")
-
-
-#port channel
-
-def port_main():
-    port_channeling_required()
-
-
-def port_channeling_required():
-    if str(sheet['D82'].value) == 'yes':
-        number_of_channels_required()
-        vlans_acess_permissions()
-        ports_added_to_port_chanel
-
-
-    if str(sheet['D82'].value) == 'no':
-        return
-        
-def number_of_channels_required():
-    if str(sheet['D83'].value) == '1':
-        print('interface port-channel 1')
-
-def vlans_acess_permissions():
-    if str(sheet['D84'].value) == 'all':
-        print(" switchport trunk allowed vlan 500,101,106,107")
-
-def ports_added_to_port_chanel(): 
-    if str(sheet['D85'].value) == '0/0/0, 0/0/1': 
-        print("lacp group 1 mode active")
-        print("lacp group 1 mode active")
-        print("interface gigabitethernet 0/0/0")
-        print("interface gigabitethernet 0/0/1")
-        print("!")  
-    
-
-             
-if __name__ == "__main__":
-    main()
-    main_vlan()
-    vrrp_main()
-    port_main()
     
         
 
 
 
-    
+main()
 
