@@ -1,0 +1,215 @@
+interface vlan 500
+ description "MGMT VLAN"
+ ip address 50.1.1.1 255.255.255.0
+!
+controller-ip vlan 500
+!
+hostname MYNAME 
+!
+vlan 101
+vlan 106
+vlan 107
+vlan 500
+!
+interface gigabitethernet 0/0/0
+ lacp group 1 mode active
+!
+interface gigabitethernet 0/0/1
+ lacp group 1 mode active
+!
+interface port-channel 1
+ switchport trunk allowed vlan 500,101,106,107
+!
+interface vlan 101
+ ip address 101.1.1.2 255.255.255.0
+ description "AP Vlan"
+!
+interface vlan 106
+ ip address 106.1.1.1 255.255.252.0
+ description "SSID1 Vlan"
+!
+interface vlan 107
+ ip address 107.1.1.1 255.255.240.0
+ description "SSID2 Vlan"
+!
+vrrp 101
+ authentication vrrppassword
+ ip address 101.1.1.1
+ description "Master"
+!
+master-redundancy
+ master-vrrp 101
+ peer-ip-address 101.1.1.3 ipsec masterpassword
+!
+ip dhcp excluded-address 101.1.1.128  101.1.1.254
+ip dhcp pool DHCP-POOL
+ default-router 101.1.1.4
+ lease 7 0 0 0
+ option 60 text MYOPTION
+ option 43 ip 101.1.1.5
+ network 101.1.1.0 255.255.255.0
+!
+service dhcp
+!
+netdestination EXTERNAL-IP
+	host 6.6.6.6
+!
+aaa authentication mac MAC-2
+!
+aaa authentication captive-portal CP-SSID-2
+   default-role FINAL-R2
+   default-guest-role FINAL-R2
+   server-group SG-2
+   login-page https://abcd.php
+   welcome-page http://abcd.com
+!
+user-role INIT-R2
+ captive-portal CP-SSID-2
+ access-list session log-c
+!
+user-role DOT1X-R1
+ access-list session allowall
+!
+user-role FINAL-R1
+ access-list session allowall
+!
+user-role INIT-R1
+ access-list session log-c
+!
+user-role FINAL-R2
+ access-list session ra-guard
+!
+user-role MAC-R1
+ access-list session allowall
+!
+ip radius source-interface vlan 500
+ip radius nas-ip 50.1.1.1
+!
+syslocation "Hamburg"
+syscontact "Cisco"
+!
+snmp-server community "mycomm"
+!
+mgmt-server type amp primary-server 30.1.1.6 profile default-amp
+!
+aaa rfc-3576-server 2.2.2.2
+!
+aaa authentication dot1x DOT1X-PF
+   machine-authentication machine-default-role MAC-R1
+   machine-authentication user-default-role DOT1X-R1
+!
+aaa authentication-server radius RADIUS-1
+   host 30.1.1.1
+   key qwerty
+!
+aaa authentication-server radius RADIUS-2
+   host 30.1.1.2
+   key asdfgh
+
+aaa authentication-server radius RADIUS-3
+   host 30.1.1.3
+   key zxcvbn
+!
+aaa server-group SG-1
+  auth-server RADIUS-1
+  auth-server RADIUS-2
+!
+aaa server-group SG-2
+  auth-server RADIUS-3
+!
+aaa server-group SG-MGMT
+  auth-server TACACS-1                       
+!
+aaa authentication mgmt                           
+   server-group SG-MGMT                       
+!
+aaa profile AAA-2
+   initial-role INIT-R2
+   authentication-mac MAC-2
+   mac-default-role FINAL-R2
+   mac-server-group SG-2
+   rfc-3576-server 2.2.2.2
+!
+aaa profile AAA-1
+   initial-role INIT-R1
+   authentication-dot1x DOT1X-PF
+   dot1x-default-role FINAL-R1
+   dot1x-server-group SG-1
+!
+ap system-profile APSYS
+   syscontact "ABC"
+   lms-ip 72.1.1.1
+!
+wlan traffic-management-profile TMP-1
+   shaping-policy fair-access
+!
+rf arm-profile MYARM-0
+   40MHz-allowed-bands None
+!
+rf arm-profile MYARM-1
+   40MHz-allowed-bands None
+!
+rf ht-radio-profile MY-HT-0
+!
+rf am-scan-profile MY-AM-0
+!
+rf dot11a-radio-profile MYRADIO-0
+   arm-profile MYARM-0
+   ht-radio-profile MY-HT-0
+   am-scan-profile MY-AM-0
+!
+rf dot11g-radio-profile MYRADIO-1
+   arm-profile MYARM-1
+!
+wlan ssid-profile SSID-2
+   essid "WIFI-2"
+!
+wlan ssid-profile SSID-1
+   essid "WIFI-1"
+   opmode wpa2-aes
+!
+wlan ssid-profile "SSID-3"
+   essid "WIFI-3"
+   opmode wpa2-aes
+!
+wlan virtual-ap default
+!
+wlan virtual-ap VAP-2
+   aaa-profile AAA-2
+   ssid-profile SSID2
+   vap-enable
+   vlan 107
+!
+wlan virtual-ap VAP-1
+   aaa-profile AAA-1
+   ssid-profile SSID1
+   vap-enable
+   vlan 106
+!
+wlan virtual-ap "VAP-3"
+   aaa-profile "AAA-1"
+   ssid-profile "SSID-3"
+   vlan 106
+!
+ap-group APGROUP-2
+   virtual-ap VAP-3
+   dot11a-radio-profile MYRADIO-0
+   dot11g-radio-profile MYRADIO-1
+   ap-system-profile APSYS
+   dot11a-traffic-mgmt-profile TMP-1
+!
+ap-group APGROUP-1
+   virtual-ap VAP-1
+   virtual-ap VAP-2
+   ap-system-profile APSYS
+!
+ap-group default
+   ap-system-profile APSYS
+!
+snmp-server enable trap
+!
+snmp-server trap source 50.1.1.1
+snmp-server host 80.1.1.1 version 2 ZZZZZ udp-port 162
+!
+location "INDIA"
+!
