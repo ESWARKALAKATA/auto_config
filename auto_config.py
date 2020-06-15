@@ -1,16 +1,22 @@
-
+import sys
+from time import gmtime, strftime
 from openpyxl import load_workbook
+from vlan_port_channeling import main_vlan 
+from vlan_port_channeling import port_channeling_required
+from vrrp import vrrp_main
+from dhcp import dhcp_main
+
+
+
+
 wb = load_workbook("user_input.xlsx")
 sheet = wb['ap_group']
-
-
-
 #variables amd their values which are assumed entered by user
 #promting user for input vap1 as 1 and vap2 as 2 and vap3 as 3
 user_vap_input = int(sheet['B2'].value)
 
 
-def main():
+def ap_main():
     user_input = int(sheet['B1'].value)
     if user_input == 1:
         print("ap-group APGROUP-1")
@@ -23,8 +29,11 @@ def main():
         apgroup2()
       
     if user_input >2 :
+        print("ap-group APGROUP-1")
+        apgroup1()
+        apgroup2()
         for i in range (3,user_input+1):
-            print("ap-group APGROUP-%d"%user_input)
+            print("ap-group APGROUP-%d"%i)
       
     
 #apgroup1
@@ -189,12 +198,20 @@ def MYARM_1():
 def TMP_1(): 
     print("wlan traffic-management-profile TMP-1 \n   shaping-policy fair-access \n!")
 
+actual_time = strftime("%Y-%m-%d %H-%M-%S", gmtime())
+file_name =  str(sheet['B11'].value)
+
+if __name__ == "__main__":
+  
+    sys.stdout = open(file_name +  "-" + str(actual_time) + ".txt", "w+") #This line is to write into the file
+    try:
+        ap_main()
+        main_vlan()
+        port_channeling_required()
+        vrrp_main()
+        dhcp_main()
+    except TypeError :
+        print("excel values were not found for to write below statements") #this will written in file if you no values found
 
 
-    
-        
-
-
-
-main()
-
+# should take care excel input even error occured that is also redirected to file
